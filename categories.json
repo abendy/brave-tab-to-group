@@ -1,12 +1,12 @@
 {
-    "Dev": { "color": "blue", "subs": ["Code", "Docs", "AI", "Infra"] },
-    "Work": { "color": "grey", "subs": ["Email", "Admin", "Planning"] },
-    "News": { "color": "red", "subs": ["Tech", "World"] },
-    "Social": { "color": "pink", "subs": [] },
-    "Media": { "color": "purple", "subs": ["Video", "Music"] },
+    "Tech": { "color": "cyan", "subs": ["Industry News", "Opinion", "Hardware", "Startups", "Security", "General / misc."] },
+    "Dev": { "color": "blue", "subs": ["IDE", "Auth", "Database", "Frontend", "Backend", "Infra", "VCS", "Docs", "Debugging", "Testing", "Packages"] },
+    "AI": { "color": "grey", "subs": ["Agent", "Harness", "Model", "Research", "API/SDK", "Evals", "Products"] },
+    "Finance": { "color": "green", "subs": ["Business", "Personal", "Markets/invest", "Economy"] },
+    "Health": { "color": "pink", "subs": [] },
+    "News": { "color": "red", "subs": [] },
     "Shopping": { "color": "yellow", "subs": [] },
-    "Finance": { "color": "green", "subs": ["Banking", "Investing"] },
-    "Research": { "color": "cyan", "subs": ["Reference", "Papers"] },
+    "Media": { "color": "purple", "subs": ["Video", "Music"] },
     "Travel": { "color": "orange", "subs": [] },
     "Other": { "color": "grey", "subs": [] }
 }

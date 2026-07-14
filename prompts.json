@@ -9,7 +9,7 @@
         "Taxonomy (category: subcategories):",
         "{{taxonomy}}",
         "",
-        "Classify each tab by what it is ABOUT. The title is the strongest signal; the domain is secondary context. Tabs marked {{titleOnlyMarker}} are on aggregator sites (search engines, social media, AI chats, streaming) where the domain says nothing about the content — judge those purely by the title (e.g. a search for flights is Travel, an AI chat about investing is Finance).",
+        "Classify each tab by what it is ABOUT. The title is the strongest signal; the domain is secondary context. Tabs marked {{titleOnlyMarker}} are on aggregator sites (search engines, social media, AI chats, streaming) where the domain says nothing about the content — judge those purely by the title. The platform is never the topic: an AI chat, search, or video belongs to the category of its subject matter (a search for flights is Travel, an AI chat about investing is Finance, a chat about a database migration is Dev). Only classify a tab under an AI-related category when its subject matter is AI itself (models, agents, evals, AI tooling).",
         "",
         "For each tab, pick the single best category. If one of that category's subcategories clearly fits, set it; otherwise set subcategory to null. Only use subcategories listed under the chosen category.",
         "",
