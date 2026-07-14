@@ -8,6 +8,7 @@ Brave/Chrome extension that looks at the current window's ungrouped tabs, classi
 - The service worker calls `claude-haiku-4-5` with a structured-output JSON schema, so the response is guaranteed valid JSON with categories constrained to the taxonomy. Tabs are sent in batches of 50 (parallel requests), so large windows don't blow past request/response limits.
 - Classification weighs the **title over the domain**. Domains listed in `site-rules.json` (search engines, social media, AI chats, streaming) are suppressed entirely — for those, only the title is sent, so a Google search about flights lands in Travel, not Research.
 - The popup shows each tab with its inferred category/subcategory in a dropdown; fix any you disagree with, then **Apply**.
+- Closing the popup doesn't lose the analysis — it's kept per window (in `chrome.storage.session`) until you apply it or close the browser. On reopen, tabs that were closed or grouped in the meantime are dropped from the list.
 - Tab groups can't nest, so each subcategory becomes its own group (titled with the subcategory name) and the **parent category decides the color** — sibling groups look related. Tabs with no subcategory go into a group named after the parent. Existing groups with a matching title are reused.
 
 ## Setup

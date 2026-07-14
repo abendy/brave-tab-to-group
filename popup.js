@@ -6,12 +6,43 @@ const listEl = document.getElementById("proposals");
 let categories = {};
 let proposals = [];
 let windowId = null;
+let stateKey = null;
 
 init();
 
 async function init() {
     categories = await fetch(chrome.runtime.getURL("categories.json")).then((r) => r.json());
     windowId = (await chrome.windows.getCurrent()).id;
+    stateKey = `analysis:${windowId}`;
+    await restoreState();
+}
+
+// Reopening the popup restores the last analysis for this window
+// (kept in session storage until applied or the browser closes)
+async function restoreState() {
+    const stored = (await chrome.storage.session.get(stateKey))[stateKey];
+    if (!stored?.proposals?.length) return;
+
+    // Drop tabs that closed or got grouped since the analysis
+    const stillUngrouped = new Set(
+        (await chrome.tabs.query({ windowId, groupId: chrome.tabGroups.TAB_GROUP_ID_NONE })).map(
+            (t) => t.id,
+        ),
+    );
+    proposals = stored.proposals.filter((p) => stillUngrouped.has(p.tabId));
+
+    if (proposals.length === 0) {
+        chrome.storage.session.remove(stateKey);
+        return;
+    }
+    saveState();
+    renderProposals();
+    applyBtn.hidden = false;
+    setStatus(`Restored analysis of ${proposals.length} tab${proposals.length === 1 ? "" : "s"}.`);
+}
+
+function saveState() {
+    chrome.storage.session.set({ [stateKey]: { proposals } });
 }
 
 analyzeBtn.addEventListener("click", async () => {
@@ -33,6 +64,7 @@ analyzeBtn.addEventListener("click", async () => {
         return;
     }
 
+    saveState();
     setStatus(`${proposals.length} tab${proposals.length === 1 ? "" : "s"} — adjust and apply.`);
     renderProposals();
     applyBtn.hidden = false;
@@ -49,6 +81,8 @@ applyBtn.addEventListener("click", async () => {
         setStatus(res.error, true);
         return;
     }
+    chrome.storage.session.remove(stateKey);
+    proposals = [];
     setStatus(`Moved ${res.grouped} tabs into ${res.groups} groups.`);
     applyBtn.hidden = true;
     listEl.replaceChildren();
@@ -69,6 +103,7 @@ function renderProposals() {
             const [category, sub] = select.value.split("|");
             p.category = category;
             p.subcategory = sub || null;
+            saveState();
         });
 
         li.append(title, select);
