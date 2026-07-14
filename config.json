@@ -1,0 +1,8 @@
+{
+    "apiUrl": "https://api.anthropic.com/v1/messages",
+    "model": "claude-haiku-4-5",
+    "batchSize": 50,
+    "maxTokens": 8192,
+    "titleMaxChars": 120,
+    "urlMaxChars": 150
+}

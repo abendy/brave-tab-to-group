@@ -1,0 +1,25 @@
+{
+    "manifest_version": 3,
+    "name": "Tab to Group",
+    "version": "0.1.0",
+    "description": "Categorize ungrouped tabs with Claude and sort them into tab groups",
+
+    "permissions": ["tabs", "tabGroups", "storage"],
+
+    "host_permissions": ["https://api.anthropic.com/*"],
+
+    "background": {
+        "service_worker": "background.js",
+        "type": "module"
+    },
+
+    "action": {
+        "default_popup": "popup.html",
+        "default_title": "Tab to Group"
+    },
+
+    "options_ui": {
+        "page": "options.html",
+        "open_in_tab": false
+    }
+}

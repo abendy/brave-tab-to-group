@@ -1,0 +1,12 @@
+{
+    "Dev": { "color": "blue", "subs": ["Code", "Docs", "AI", "Infra"] },
+    "Work": { "color": "grey", "subs": ["Email", "Admin", "Planning"] },
+    "News": { "color": "red", "subs": ["Tech", "World"] },
+    "Social": { "color": "pink", "subs": [] },
+    "Media": { "color": "purple", "subs": ["Video", "Music"] },
+    "Shopping": { "color": "yellow", "subs": [] },
+    "Finance": { "color": "green", "subs": ["Banking", "Investing"] },
+    "Research": { "color": "cyan", "subs": ["Reference", "Papers"] },
+    "Travel": { "color": "orange", "subs": [] },
+    "Other": { "color": "grey", "subs": [] }
+}

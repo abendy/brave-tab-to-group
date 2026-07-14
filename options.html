@@ -1,0 +1,36 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <style>
+            body {
+                font: 13px/1.4 system-ui, sans-serif;
+                padding: 16px;
+                min-width: 340px;
+            }
+            label {
+                display: block;
+                margin-bottom: 4px;
+                font-weight: 600;
+            }
+            input {
+                font: inherit;
+                width: 100%;
+                box-sizing: border-box;
+                padding: 6px;
+                margin-bottom: 10px;
+            }
+            #saved {
+                color: #16a34a;
+                margin-left: 8px;
+            }
+        </style>
+    </head>
+    <body>
+        <label for="apiKey">Anthropic API key</label>
+        <input id="apiKey" type="password" placeholder="sk-ant-..." autocomplete="off" />
+        <button id="save">Save</button><span id="saved"></span>
+
+        <script src="options.js"></script>
+    </body>
+</html>
