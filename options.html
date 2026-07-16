@@ -3,30 +3,183 @@
     <head>
         <meta charset="utf-8" />
         <style>
+            /* Same Y2K console skin as popup.css: brushed metal, glossy
+               bubble button, LCD-style key input. Pure CSS, no images. */
+
             body {
-                font: 13px/1.4 system-ui, sans-serif;
-                padding: 16px;
                 min-width: 340px;
+                max-width: 460px;
+                margin: 0 auto;
+                padding: 18px;
+                font: 13px/1.4 system-ui, sans-serif;
+                color: #cfd8e3;
+                background:
+                    radial-gradient(130% 90% at 50% -20%, rgba(255, 255, 255, 0.28), transparent 55%),
+                    radial-gradient(120% 100% at 50% 120%, rgba(0, 0, 0, 0.45), transparent 60%),
+                    repeating-linear-gradient(180deg, #565d66 0 1px, #4a5057 1px 3px);
+                position: relative;
             }
+
+            /* Corner screws */
+            body::before,
+            body::after {
+                content: "";
+                position: absolute;
+                top: 6px;
+                width: 9px;
+                height: 9px;
+                border-radius: 50%;
+                background:
+                    linear-gradient(135deg, transparent 42%, rgba(20, 24, 28, 0.9) 45%, rgba(20, 24, 28, 0.9) 55%, transparent 58%),
+                    radial-gradient(circle at 35% 30%, #e8edf2, #99a3ad 45%, #4c545c 80%);
+                box-shadow:
+                    inset 0 1px 1px rgba(255, 255, 255, 0.6),
+                    0 1px 2px rgba(0, 0, 0, 0.7);
+            }
+
+            body::before {
+                left: 6px;
+            }
+
+            body::after {
+                right: 6px;
+            }
+
+            h1 {
+                display: flex;
+                align-items: center;
+                gap: 7px;
+                margin: 0 0 14px;
+                font-size: 14px;
+                font-weight: 800;
+                text-transform: uppercase;
+                letter-spacing: 0.14em;
+                background: linear-gradient(#ffffff, #c9d3de 42%, #737f8d 50%, #eef3f8 58%, #8d9dae);
+                -webkit-background-clip: text;
+                background-clip: text;
+                color: transparent;
+                filter: drop-shadow(0 1px 0 rgba(0, 0, 0, 0.55));
+            }
+
+            /* Power LED */
+            h1::before {
+                content: "";
+                flex: none;
+                width: 10px;
+                height: 10px;
+                border-radius: 50%;
+                background: radial-gradient(circle at 35% 30%, #eaffe1, #6cf07a 40%, #128a2e 75%, #063d14);
+                box-shadow:
+                    inset 0 1px 1px rgba(255, 255, 255, 0.8),
+                    0 0 8px rgba(80, 255, 120, 0.8),
+                    0 1px 2px rgba(0, 0, 0, 0.7);
+            }
+
             label {
                 display: block;
-                margin-bottom: 4px;
-                font-weight: 600;
+                margin-bottom: 6px;
+                font-weight: 700;
+                font-size: 11px;
+                text-transform: uppercase;
+                letter-spacing: 0.1em;
+                color: #aeb9c6;
+                text-shadow: 0 1px 1px rgba(0, 0, 0, 0.7);
             }
+
+            /* LCD key input */
             input {
-                font: inherit;
                 width: 100%;
                 box-sizing: border-box;
-                padding: 6px;
-                margin-bottom: 10px;
+                margin-bottom: 12px;
+                padding: 8px 10px;
+                font: 12px/1.4 ui-monospace, "SF Mono", Menlo, monospace;
+                color: #7dffa0;
+                text-shadow: 0 0 6px rgba(90, 255, 140, 0.65);
+                caret-color: #7dffa0;
+                background:
+                    repeating-linear-gradient(180deg, rgba(0, 0, 0, 0.25) 0 1px, transparent 1px 3px),
+                    linear-gradient(#041a0b, #073016 55%, #041a0b);
+                border: 1px solid #000;
+                border-radius: 7px;
+                box-shadow:
+                    inset 0 2px 6px rgba(0, 0, 0, 0.9),
+                    inset 0 0 14px rgba(0, 90, 35, 0.55),
+                    0 1px 0 rgba(255, 255, 255, 0.12);
             }
+
+            input::placeholder {
+                color: rgba(125, 255, 160, 0.35);
+                text-shadow: none;
+            }
+
+            input:focus-visible {
+                outline: 2px solid rgba(120, 210, 255, 0.8);
+                outline-offset: 2px;
+            }
+
+            /* Glossy bubble button */
+            button {
+                position: relative;
+                overflow: hidden;
+                font: 700 11px/1 system-ui, sans-serif;
+                text-transform: uppercase;
+                letter-spacing: 0.08em;
+                color: #f2faff;
+                text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.7);
+                padding: 8px 18px;
+                border: 1px solid rgba(0, 0, 0, 0.85);
+                border-radius: 999px;
+                background: linear-gradient(#a5dcff, #2f9ae6 45%, #0e64ad 50%, #1a7cc9 88%, #55aee6);
+                box-shadow:
+                    inset 0 1px 0 rgba(255, 255, 255, 0.65),
+                    inset 0 -3px 5px rgba(0, 20, 50, 0.5),
+                    0 0 10px rgba(60, 160, 255, 0.45),
+                    0 1px 2px rgba(0, 0, 0, 0.6);
+                cursor: pointer;
+            }
+
+            /* Curved gloss cap */
+            button::after {
+                content: "";
+                position: absolute;
+                left: 8%;
+                right: 8%;
+                top: 1px;
+                height: 45%;
+                border-radius: 999px;
+                background: linear-gradient(rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0.05));
+                pointer-events: none;
+            }
+
+            button:hover {
+                filter: brightness(1.15);
+            }
+
+            button:active {
+                box-shadow:
+                    inset 0 2px 5px rgba(0, 0, 0, 0.7),
+                    0 1px 0 rgba(255, 255, 255, 0.15);
+                filter: brightness(0.95);
+            }
+
+            button:focus-visible {
+                outline: 2px solid rgba(120, 210, 255, 0.8);
+                outline-offset: 2px;
+            }
+
             #saved {
-                color: #16a34a;
-                margin-left: 8px;
+                margin-left: 10px;
+                font: 700 11px ui-monospace, "SF Mono", Menlo, monospace;
+                text-transform: uppercase;
+                letter-spacing: 0.1em;
+                color: #7dffa0;
+                text-shadow: 0 0 8px rgba(90, 255, 140, 0.8);
             }
         </style>
     </head>
     <body>
+        <h1>Tab to Group</h1>
+
         <label for="apiKey">Anthropic API key</label>
         <input id="apiKey" type="password" placeholder="sk-ant-..." autocomplete="off" />
         <button id="save">Save</button><span id="saved"></span>
