@@ -77,7 +77,9 @@ button:disabled {
 
 footer {
     margin-top: 10px;
-    text-align: right;
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
 }
 
 #apply {

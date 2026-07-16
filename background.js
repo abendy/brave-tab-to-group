@@ -33,6 +33,12 @@ chrome.runtime.onMessage.addListener((msg, _sender, sendResponse) => {
             .catch((e) => sendResponse({ error: e.message }));
         return true;
     }
+    if (msg.type === "undo") {
+        undo(msg.windowId)
+            .then(sendResponse)
+            .catch((e) => sendResponse({ error: e.message }));
+        return true;
+    }
 });
 
 async function analyze(windowId) {
@@ -195,8 +201,11 @@ async function classifyTabs(apiKey, assets, tabs) {
 async function apply(windowId, assignments) {
     const { categories } = await loadAssets();
 
-    // Tabs may have closed since analysis — only group ones that still exist
-    const liveIds = new Set((await chrome.tabs.query({ windowId })).map((t) => t.id));
+    // Tabs may have closed since analysis — only group ones that still exist.
+    // Record each tab's position first so the grouping can be undone.
+    const liveTabs = await chrome.tabs.query({ windowId });
+    const liveIds = new Set(liveTabs.map((t) => t.id));
+    const indexById = new Map(liveTabs.map((t) => [t.id, t.index]));
 
     // Group name is the subcategory when there is one, else the parent;
     // the parent always decides the color.
@@ -222,5 +231,33 @@ async function apply(windowId, assignments) {
         grouped += tabIds.length;
     }
 
+    // Snapshot for undo — only the most recent apply is undoable
+    const snapshot = [...groups.values()]
+        .flatMap(({ tabIds }) => tabIds)
+        .map((tabId) => ({ tabId, index: indexById.get(tabId) }));
+    await chrome.storage.session.set({ [`undo:${windowId}`]: { tabs: snapshot } });
+
     return { grouped, groups: groups.size };
+}
+
+async function undo(windowId) {
+    const key = `undo:${windowId}`;
+    const snapshot = (await chrome.storage.session.get(key))[key];
+    if (!snapshot?.tabs?.length) {
+        throw new Error("Nothing to undo.");
+    }
+
+    const liveIds = new Set((await chrome.tabs.query({ windowId })).map((t) => t.id));
+    const tabs = snapshot.tabs.filter((t) => liveIds.has(t.tabId));
+
+    if (tabs.length > 0) {
+        await chrome.tabs.ungroup(tabs.map((t) => t.tabId));
+        // Restore positions left-to-right so earlier moves don't shift later targets
+        for (const t of [...tabs].sort((a, b) => a.index - b.index)) {
+            await chrome.tabs.move(t.tabId, { index: t.index });
+        }
+    }
+
+    await chrome.storage.session.remove(key);
+    return { restored: tabs.length };
 }

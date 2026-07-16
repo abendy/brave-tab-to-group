@@ -9,6 +9,7 @@ Brave/Chrome extension that looks at the current window's ungrouped tabs, classi
 - Classification weighs the **title over the domain**. Domains listed in `site-rules.json` (search engines, social media, AI chats, streaming) are suppressed entirely — for those, only the title is sent, so a Google search about flights lands in Travel, not Research.
 - The popup shows each tab with its inferred category/subcategory in a dropdown; fix any you disagree with, then **Apply**.
 - Closing the popup doesn't lose the analysis — it's kept per window (in `chrome.storage.session`) until you apply it or close the browser. On reopen, tabs that were closed or grouped in the meantime are dropped from the list.
+- **Undo** reverses the last Apply: tabs are ungrouped and moved back to their original positions. Only the most recent grouping is undoable (each Apply replaces the snapshot), and it survives popup close like the analysis does. Tabs closed since applying are skipped; positions are best-effort if you've opened new tabs in between.
 - Tab groups can't nest, so each subcategory becomes its own group (titled with the subcategory name) and the **parent category decides the color** — sibling groups look related. Tabs with no subcategory go into a group named after the parent. Existing groups with a matching title are reused.
 
 ## Setup

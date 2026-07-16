@@ -1,5 +1,6 @@
 const analyzeBtn = document.getElementById("analyze");
 const applyBtn = document.getElementById("apply");
+const undoBtn = document.getElementById("undo");
 const statusEl = document.getElementById("status");
 const listEl = document.getElementById("proposals");
 
@@ -7,6 +8,7 @@ let categories = {};
 let proposals = [];
 let windowId = null;
 let stateKey = null;
+let undoKey = null;
 
 init();
 
@@ -14,12 +16,17 @@ async function init() {
     categories = await fetch(chrome.runtime.getURL("categories.json")).then((r) => r.json());
     windowId = (await chrome.windows.getCurrent()).id;
     stateKey = `analysis:${windowId}`;
+    undoKey = `undo:${windowId}`;
     await restoreState();
 }
 
 // Reopening the popup restores the last analysis for this window
-// (kept in session storage until applied or the browser closes)
+// (kept in session storage until applied or the browser closes),
+// and re-offers undo if the last grouping hasn't been undone
 async function restoreState() {
+    const undoState = (await chrome.storage.session.get(undoKey))[undoKey];
+    undoBtn.hidden = !undoState?.tabs?.length;
+
     const stored = (await chrome.storage.session.get(stateKey))[stateKey];
     if (!stored?.proposals?.length) return;
 
@@ -85,7 +92,23 @@ applyBtn.addEventListener("click", async () => {
     proposals = [];
     setStatus(`Moved ${res.grouped} tabs into ${res.groups} groups.`);
     applyBtn.hidden = true;
+    undoBtn.hidden = false;
     listEl.replaceChildren();
+});
+
+undoBtn.addEventListener("click", async () => {
+    undoBtn.disabled = true;
+    setStatus("Undoing…");
+
+    const res = await chrome.runtime.sendMessage({ type: "undo", windowId });
+    undoBtn.disabled = false;
+
+    if (res.error) {
+        setStatus(res.error, true);
+        return;
+    }
+    undoBtn.hidden = true;
+    setStatus(`Ungrouped ${res.restored} tab${res.restored === 1 ? "" : "s"} and restored their order.`);
 });
 
 function renderProposals() {
